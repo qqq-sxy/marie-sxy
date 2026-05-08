@@ -91,8 +91,9 @@ def classify_file(
     *,
     cache: ClassificationCache | None = None,
     completion_fn: Any | None = None,
+    content_hint: str = "",
 ) -> FileClassification:
-    """Classify a single file (filename + suffix only in the Week 2 prompt)."""
+    """Classify a single file using filename, suffix, and optional content hint."""
     cache = cache or ClassificationCache.default()
     key = cache_key_for_file(info)
     hit = cache.get(key)
@@ -107,7 +108,7 @@ def classify_file(
     model = os.environ.get("MARIE_SXY_MODEL", DEFAULT_MODEL).strip() or DEFAULT_MODEL
     fn = completion_fn or _completion_sync
     prompt = (
-        "你是文件整理助手. 仅根据文件名和扩展名, 给出最合适的分类路径"
+        "你是文件整理助手. 根据文件信息给出最合适的分类路径"
         '(用 "/" 分隔层级, 如 文档/发票, 图片/截图, 代码/Python).\n'
         "返回严格 JSON, 不要 Markdown, 不要解释:\n"
         '{"category": "<路径>", "confidence": <0到1的小数>, '
@@ -115,6 +116,8 @@ def classify_file(
         f"文件名: {info.name}\n"
         f"扩展名: {info.suffix or '(无)'}\n"
     )
+    if content_hint:
+        prompt += f"内容特征: {content_hint}\n"
 
     try:
         resp = fn(model, [{"role": "user", "content": prompt}])

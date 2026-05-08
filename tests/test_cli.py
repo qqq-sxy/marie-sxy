@@ -62,9 +62,48 @@ def test_organize_dry_run_offline(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
     assert "invoice_april.pdf" in result.stdout
 
 
-def test_organize_apply_not_implemented(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_organize_apply_moves_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MARIE_SXY_OFFLINE", "1")
     monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache_root"))
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path / "data_root"))
 
-    result = runner.invoke(app, ["organize", str(tmp_path), "--apply"])
-    assert result.exit_code != 0
+    (tmp_path / "invoice_april.pdf").write_bytes(b"x")
+
+    result = runner.invoke(app, ["organize", str(tmp_path), "--apply", "--yes"])
+    assert result.exit_code == 0
+    # At least one file should have been moved
+    assert "Moved" in result.stdout or "already in the right place" in result.stdout
+
+
+def test_organize_apply_empty_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MARIE_SXY_OFFLINE", "1")
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache_root"))
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path / "data_root"))
+
+    result = runner.invoke(app, ["organize", str(tmp_path), "--apply", "--yes"])
+    assert result.exit_code == 0
+    assert "No files found" in result.stdout
+
+
+def test_undo_no_history(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path / "data_root"))
+
+    result = runner.invoke(app, ["undo", "--apply", "--yes"])
+    assert result.exit_code == 0
+    assert "No history" in result.stdout
+
+
+def test_undo_dry_run_shows_plan(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MARIE_SXY_OFFLINE", "1")
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache_root"))
+    monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path / "data_root"))
+
+    (tmp_path / "invoice_april.pdf").write_bytes(b"x")
+
+    # First organize --apply
+    runner.invoke(app, ["organize", str(tmp_path), "--apply", "--yes"])
+
+    # Then undo --dry-run
+    result = runner.invoke(app, ["undo"])
+    assert result.exit_code == 0
+    assert "apply" in result.stdout.lower() or "reverse" in result.stdout.lower()

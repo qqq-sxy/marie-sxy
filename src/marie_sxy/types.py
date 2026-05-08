@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 
 
 class FileInfo(BaseModel):
@@ -50,6 +50,48 @@ class FileClassification(BaseModel):
         default=None,
         description="Optional better filename; None to keep the original.",
     )
+
+
+class MoveOp(BaseModel):
+    """A single file-move operation: source → destination."""
+
+    model_config = ConfigDict(frozen=True)
+
+    src: Path = Field(..., description="Absolute path of the file before the move.")
+    dst: Path = Field(..., description="Absolute path of the file after the move.")
+
+    @field_validator("src", "dst", mode="before")
+    @classmethod
+    def _coerce_path(cls, v: object) -> Path:
+        return Path(v)
+
+    @field_serializer("src", "dst")
+    def _ser_path(self, v: Path) -> str:
+        return str(v)
+
+
+class HistorySession(BaseModel):
+    """One complete organize-and-move session recorded for undo."""
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    session_id: str = Field(..., description="UUID or timestamp-based unique ID.")
+    timestamp: datetime = Field(..., description="When this session ran.")
+    root: Path = Field(..., description="Directory that was organized.")
+    ops: list[MoveOp] = Field(default_factory=list, description="Moves performed.")
+
+    @field_validator("root", mode="before")
+    @classmethod
+    def _coerce_root(cls, v: object) -> Path:
+        return Path(v)
+
+    @field_serializer("root")
+    def _ser_root(self, v: Path) -> str:
+        return str(v)
+
+    @field_serializer("timestamp")
+    def _ser_ts(self, v: datetime) -> str:
+        return v.isoformat()
 
 
 class ScanResult(BaseModel):

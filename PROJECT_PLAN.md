@@ -246,20 +246,21 @@ marie_sxy/
 - [x] 用 `rich.tree` 展示分类结果
 - **里程碑**：跑通 `marie_sxy organize ~/Downloads --dry-run` 看到分类树 ✅
 
-### Week 3：内容理解
+### Week 3：内容理解 ✅
 
-- [ ] PDF 提取首页文本 → 给 LLM 判断是发票/简历/论文
-- [ ] 图片用多模态 LLM（GPT-4o-mini / Claude Haiku）
-- [ ] 代码文件识别语言
-- **里程碑**：能区分"截图"和"表情包"
+- [x] PDF 提取首页文本 → 给 LLM 判断是发票/简历/论文
+- [x] 图片用多模态 LLM（GPT-4o-mini / Claude Haiku）
+- [x] 代码文件识别语言
+- **里程碑**：能区分"截图"和"表情包" ✅
 
-### Week 4：执行 + 安全
+### Week 4：执行 + 安全 ✅
 
-- [ ] 实现 `Executor`（移动文件 + 处理冲突）
-- [ ] 实现 `History`（记录操作 → 支持 undo）
-- [ ] 交互式确认（用 `rich.prompt`）
-- [ ] 写单元测试
-- **里程碑**：完整闭环，敢于在自己电脑上用
+- [x] 实现 `Planner`（生成 MoveOp 列表，处理冲突/重名）
+- [x] 实现 `Executor`（移动文件 + 处理冲突）
+- [x] 实现 `History`（记录操作 → 支持 undo）
+- [x] 交互式确认（用 `rich.prompt`）
+- [x] 写单元测试
+- **里程碑**：完整闭环，敢于在自己电脑上用 ✅
 
 ### Week 5：打磨 + 文档
 
