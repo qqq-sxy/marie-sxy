@@ -5,6 +5,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from marie_sxy.llm_config import apply_marie_sxy_unified_credentials
+
 
 def load_dotenv_files() -> None:
     """Populate ``os.environ`` from dotenv files.
@@ -27,6 +29,7 @@ def load_dotenv_files() -> None:
         path = Path(explicit).expanduser().resolve()
         if path.is_file():
             load_dotenv(path, override=False)
+        apply_marie_sxy_unified_credentials()
         return
 
     cwd_env = Path.cwd() / ".env"
@@ -38,3 +41,5 @@ def load_dotenv_files() -> None:
     user_env = base / "marie_sxy" / ".env"
     if user_env.is_file():
         load_dotenv(user_env, override=False)
+
+    apply_marie_sxy_unified_credentials()

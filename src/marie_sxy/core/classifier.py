@@ -9,6 +9,7 @@ import re
 from typing import Any
 
 from marie_sxy.core.cache import ClassificationCache, cache_key_for_file
+from marie_sxy.llm_config import DEFAULT_MODEL
 from marie_sxy.types import FileClassification, FileInfo
 
 logger = logging.getLogger(__name__)
@@ -103,7 +104,7 @@ def classify_file(
         cache.set(key, result)
         return result
 
-    model = os.environ.get("MARIE_SXY_MODEL", "gpt-4o-mini")
+    model = os.environ.get("MARIE_SXY_MODEL", DEFAULT_MODEL).strip() or DEFAULT_MODEL
     fn = completion_fn or _completion_sync
     prompt = (
         "你是文件整理助手. 仅根据文件名和扩展名, 给出最合适的分类路径"

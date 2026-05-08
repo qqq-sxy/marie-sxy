@@ -40,8 +40,9 @@ uv run marie_sxy organize ~/Downloads --dry-run
 ### API Key（本地文件，不会进 Git）
 
 1. 复制仓库里的 [`.env.example`](./.env.example) 为 **`.env`**（与 `pyproject.toml` 同级即可）。
-2. 在 `.env` 里填写例如 `OPENAI_API_KEY=sk-...`（默认模型为 `gpt-4o-mini`，也可用 `MARIE_SXY_MODEL` 覆盖）。
-3. **`.env` 已在 `.gitignore` 中**，`git push` 不会带上远程。
+2. **推荐一套变量走天下**：只填 **`MARIE_SXY_API_KEY`** 和 **`MARIE_SXY_MODEL`**。程序会根据模型名自动把密钥写到 LiteLLM 需要的厂商变量里（例如 `gpt-4o-mini` → `OPENAI_API_KEY`，`deepseek/deepseek-chat` → `DEEPSEEK_API_KEY`）。换厂商时一般只需改这两条。
+3. 若不想用统一变量，仍可照旧分别设置 `OPENAI_API_KEY`、`DEEPSEEK_API_KEY` 等（且不设 `MARIE_SXY_API_KEY`）。
+4. **`.env` 已在 `.gitignore` 中**，`git push` 不会带上远程。
 
 可选：用环境变量 **`MARIE_SXY_ENV_FILE=/绝对路径/自定义.env`** 指定任意密钥文件（同样请勿提交该文件）。
 
