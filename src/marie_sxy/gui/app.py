@@ -98,7 +98,7 @@ def _main(page: ft.Page) -> None:
 
 
 def run_app() -> None:
-    ft.app(target=_main)
+    ft.run(_main)
 
 
 if __name__ == "__main__":
