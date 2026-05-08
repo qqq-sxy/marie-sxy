@@ -6,8 +6,8 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
-from marie import __version__
-from marie.cli import app
+from marie_sxy import __version__
+from marie_sxy.cli import app
 
 runner = CliRunner()
 
@@ -21,7 +21,7 @@ def test_version_flag() -> None:
 def test_help_runs() -> None:
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "marie" in result.stdout.lower()
+    assert "marie_sxy" in result.stdout.lower()
 
 
 def test_scan_on_empty_dir(tmp_path: Path) -> None:

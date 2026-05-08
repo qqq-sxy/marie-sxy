@@ -1,4 +1,4 @@
-# Marie - AI 文件智能整理工具
+# marie_sxy - AI 文件智能整理工具
 
 > 用 AI 实现近藤麻理惠的整理魔法：丢一个文件夹给我，还你一个井井有条的世界。
 
@@ -33,13 +33,13 @@
 | `tidyai` | tidy + ai，简洁好记 | ⭐⭐⭐⭐⭐ |
 | `organize-ai` | 直白 | ⭐⭐⭐⭐ |
 | `folderly` | folder + 友好后缀 | ⭐⭐⭐ |
-| `marie` | 致敬"近藤麻理惠"（怦然心动整理法） | ⭐⭐⭐⭐⭐ 但 PyPI 已被占用 |
+| `marie_sxy` | 致敬"近藤麻理惠"（怦然心动整理法） | ⭐⭐⭐⭐⭐ 但 PyPI 已被占用 |
 | `cleansweep` | 大扫除 | ⭐⭐⭐ |
 
 > **最终选择**：
-> - **PyPI 包名**：`marie-sxy`（因为 `marie` 在 PyPI 已被占用，加作者后缀区分）
-> - **Python 模块名**：`marie`（保留短名，便于 `import marie` 使用）
-> - **CLI 命令**：`marie`（保留短名，方便用户输入）
+> - **PyPI 包名**：`marie_sxy`（因为 `marie_sxy` 在 PyPI 已被占用，加作者后缀区分）
+> - **Python 模块名**：`marie_sxy`（保留短名，便于 `import marie_sxy` 使用）
+> - **CLI 命令**：`marie_sxy`（保留短名，方便用户输入）
 >
 > 这种"PyPI 名带后缀、import 名保持短名"的做法在社区很常见，例如 `pillow`/`PIL`、`beautifulsoup4`/`bs4`、`python-dotenv`/`dotenv`。
 
@@ -53,9 +53,9 @@
 
 ## 二、核心卖点（差异化）
 
-跟现有工具（`organize`、`hazel`、`maid`）对比，Marie 的杀手锏：
+跟现有工具（`organize`、`hazel`、`maid`）对比，marie_sxy 的杀手锏：
 
-| 特性 | 传统工具 | Marie |
+| 特性 | 传统工具 | marie_sxy |
 |------|---------|-------|
 | 整理依据 | **文件名 / 后缀** 规则 | **AI 看文件内容** |
 | 配置成本 | 要写规则 / YAML | **零配置，开箱即用** |
@@ -77,7 +77,7 @@
 ### 必做（Week 1-3）
 
 ```text
-[CLI] marie ~/Downloads
+[CLI] marie_sxy ~/Downloads
   → 扫描所有文件
   → AI 分析（按类型 + 内容）
   → 生成整理建议（控制台展示树形结构）
@@ -171,7 +171,7 @@ local = ["ollama"]            # 本地模型
 ui = ["textual>=0.80"]        # TUI 界面（可选）
 
 [project.scripts]
-marie = "marie.cli:app"       # 注册命令
+marie_sxy = "marie_sxy.cli:app"       # 注册命令
 ```
 
 ---
@@ -179,9 +179,9 @@ marie = "marie.cli:app"       # 注册命令
 ## 五、项目结构
 
 ```text
-marie/
+marie_sxy/
 ├── src/
-│   └── marie/
+│   └── marie_sxy/
 │       ├── __init__.py
 │       ├── cli.py                   # CLI 入口（typer）
 │       ├── core/
@@ -235,7 +235,7 @@ marie/
 - [ ] 初始化项目（用 `uv init`）
 - [ ] 搭好 pyproject.toml + ruff + pytest
 - [ ] 实现 `Scanner`：递归扫描、获取文件元数据
-- [ ] 实现基础 CLI：`marie scan ~/Downloads` 输出文件列表
+- [ ] 实现基础 CLI：`marie_sxy scan ~/Downloads` 输出文件列表
 - **里程碑**：能 print 出"找到 X 个文件"
 
 ### Week 2：分类核心
@@ -244,7 +244,7 @@ marie/
 - [ ] 设计 Prompt（输出 JSON，用 Pydantic 校验）
 - [ ] 加缓存层（避免每次都调 API）
 - [ ] 用 `rich.tree` 展示分类结果
-- **里程碑**：跑通 `marie ~/Downloads --dry-run` 看到分类树
+- **里程碑**：跑通 `marie_sxy ~/Downloads --dry-run` 看到分类树
 
 ### Week 3：内容理解
 
@@ -364,7 +364,7 @@ class FileClassification(BaseModel):
 按这个顺序写：
 
 ```markdown
-# Marie ✨
+# marie_sxy ✨
 > AI-powered file organizer. Drop a folder, get magic.
 
 [Badges: PyPI / Stars / License / CI]
@@ -373,9 +373,9 @@ class FileClassification(BaseModel):
 [GIF：从混乱的下载文件夹 → 整理后的截图]
 
 ## ⚡ Quick Start
-pip install marie-sxy
-marie ~/Downloads          # 预览
-marie ~/Downloads --apply  # 执行
+pip install marie_sxy
+marie_sxy ~/Downloads          # 预览
+marie_sxy ~/Downloads --apply  # 执行
 
 ## ✨ Features
 - 🧠 AI-powered classification (looks at content, not just names)
@@ -418,7 +418,7 @@ marie ~/Downloads --apply  # 执行
 
 不需要等开始写代码，今天就能完成的：
 
-1. ~~**抢名字**：去 [PyPI](https://pypi.org/) 搜 `marie` 看是否被占用~~ → 已确认被占用，最终采用 `marie-sxy`
+1. ~~**抢名字**：去 [PyPI](https://pypi.org/) 搜 `marie_sxy` 看是否被占用~~ → 已确认被占用，最终采用 `marie_sxy`
 2. **抢域名**：考虑买个 `.dev` 域名（10 美元/年）
 3. **建 GitHub 空仓库**：先把 README 写好，push 上去（哪怕没代码）
 4. **拍一张"凌乱的下载文件夹"截图**：作为日后的 before 对比图

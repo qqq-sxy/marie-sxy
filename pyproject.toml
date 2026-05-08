@@ -1,5 +1,5 @@
 [project]
-name = "marie-sxy"
+name = "marie_sxy"
 version = "0.1.0"
 description = "AI-powered file organizer. Drop a folder, get magic."
 readme = "README.md"
@@ -28,25 +28,25 @@ dependencies = [
 ]
 
 [project.scripts]
-marie = "marie.cli:app"
+marie_sxy = "marie_sxy.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/sunxiaoyu/marie"
-Repository = "https://github.com/sunxiaoyu/marie"
-Issues = "https://github.com/sunxiaoyu/marie/issues"
+Homepage = "https://github.com/sunxiaoyu/marie_sxy"
+Repository = "https://github.com/sunxiaoyu/marie_sxy"
+Issues = "https://github.com/sunxiaoyu/marie_sxy/issues"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-# PyPI distribution name is ``marie-sxy`` but the importable Python package
-# is ``marie``. Tell hatchling where the actual package lives.
+# PyPI distribution name is ``marie_sxy`` but the importable Python package
+# is ``marie_sxy``. Tell hatchling where the actual package lives.
 [tool.hatch.build.targets.wheel]
-packages = ["src/marie"]
+packages = ["src/marie_sxy"]
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "src/marie",
+    "src/marie_sxy",
     "tests",
     "README.md",
     "PROJECT_PLAN.md",
@@ -94,7 +94,7 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 
 [tool.coverage.run]
-source = ["src/marie"]
+source = ["src/marie_sxy"]
 branch = true
 
 [tool.coverage.report]

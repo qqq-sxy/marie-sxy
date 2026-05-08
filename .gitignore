@@ -38,9 +38,9 @@ Thumbs.db
 *.swo
 *~
 
-# --------- Marie runtime ---------
+# --------- marie_sxy runtime ---------
 # Local config / cache directories created at runtime.
-.marie/
+.marie_sxy/
 *.local.yaml
 *.local.toml
 

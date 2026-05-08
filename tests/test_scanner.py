@@ -1,4 +1,4 @@
-"""Unit tests for :class:`marie.core.scanner.Scanner`."""
+"""Unit tests for :class:`marie_sxy.core.scanner.Scanner`."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from marie.core import Scanner
-from marie.types import FileInfo, ScanResult
+from marie_sxy.core import Scanner
+from marie_sxy.types import FileInfo, ScanResult
 
 # --------------------------------------------------------------------- fixtures
 

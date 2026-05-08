@@ -12,7 +12,7 @@ from collections.abc import Iterable, Iterator
 from datetime import datetime
 from pathlib import Path
 
-from marie.types import FileInfo, ScanResult
+from marie_sxy.types import FileInfo, ScanResult
 
 logger = logging.getLogger(__name__)
 

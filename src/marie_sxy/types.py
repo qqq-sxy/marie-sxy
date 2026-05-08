@@ -1,4 +1,4 @@
-"""Shared data models used across Marie modules."""
+"""Shared data models used across marie_sxy modules."""
 
 from __future__ import annotations
 

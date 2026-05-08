@@ -1,6 +1,6 @@
-"""Command-line entrypoint for Marie.
+"""Command-line entrypoint for marie_sxy.
 
-Run ``marie --help`` after installing the package (``uv sync``).
+Run ``marie_sxy --help`` after installing the package (``uv sync``).
 """
 
 from __future__ import annotations
@@ -12,11 +12,11 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from marie import __version__
-from marie.core import Scanner
+from marie_sxy import __version__
+from marie_sxy.core import Scanner
 
 app = typer.Typer(
-    name="marie",
+    name="marie_sxy",
     help="✨ AI-powered file organizer. Drop a folder, get magic.",
     no_args_is_help=True,
     add_completion=False,
@@ -27,7 +27,7 @@ err_console = Console(stderr=True, style="bold red")
 
 def _version_callback(value: bool) -> None:
     if value:
-        console.print(f"marie {__version__}")
+        console.print(f"marie_sxy {__version__}")
         raise typer.Exit()
 
 
@@ -100,7 +100,7 @@ def scan(
 def _render_summary(result, *, limit: int) -> None:
     """Pretty-print the scan result using rich."""
     console.print()
-    console.rule(f"[bold]✨ Marie scan: {result.root}")
+    console.rule(f"[bold]✨ marie_sxy scan: {result.root}")
 
     if result.total == 0:
         console.print("[yellow]No files found.[/yellow]")
