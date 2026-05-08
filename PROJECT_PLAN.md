@@ -230,13 +230,13 @@ marie_sxy/
 
 ## 六、6 周开发路线图（每周 15-20 小时）
 
-### Week 1：地基
+### Week 1：地基 ✅
 
-- [ ] 初始化项目（用 `uv init`）
-- [ ] 搭好 pyproject.toml + ruff + pytest
-- [ ] 实现 `Scanner`：递归扫描、获取文件元数据
-- [ ] 实现基础 CLI：`marie_sxy scan ~/Downloads` 输出文件列表
-- **里程碑**：能 print 出"找到 X 个文件"
+- [x] 初始化项目（用 `uv init`）
+- [x] 搭好 pyproject.toml + ruff + pytest
+- [x] 实现 `Scanner`：递归扫描、获取文件元数据
+- [x] 实现基础 CLI：`marie_sxy scan ~/Downloads` 输出文件列表
+- **里程碑**：能 print 出"找到 X 个文件" ✅
 
 ### Week 2：分类核心
 

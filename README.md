@@ -8,7 +8,7 @@
 
 ## 🚧 Status
 
-**Alpha** - 正在开发中（Week 1: 项目地基）
+**Alpha** - 正在开发中（Week 1 地基已完成，当前 Week 2：分类核心）
 
 详细规划见 [`PROJECT_PLAN.md`](./PROJECT_PLAN.md)。
 
