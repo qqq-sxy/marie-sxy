@@ -1,0 +1,164 @@
+"""Command-line entrypoint for Marie.
+
+Run ``marie --help`` after installing the package (``uv sync``).
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Annotated
+
+import typer
+from rich.console import Console
+from rich.table import Table
+
+from marie import __version__
+from marie.core import Scanner
+
+app = typer.Typer(
+    name="marie",
+    help="✨ AI-powered file organizer. Drop a folder, get magic.",
+    no_args_is_help=True,
+    add_completion=False,
+)
+console = Console()
+err_console = Console(stderr=True, style="bold red")
+
+
+def _version_callback(value: bool) -> None:
+    if value:
+        console.print(f"marie {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def _root(
+    version: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            "-V",
+            help="Show version and exit.",
+            callback=_version_callback,
+            is_eager=True,
+        ),
+    ] = False,
+) -> None:
+    """Root command - shared options live here."""
+
+
+@app.command()
+def scan(
+    path: Annotated[
+        Path,
+        typer.Argument(
+            help="Directory to scan.",
+            exists=True,
+            file_okay=False,
+            dir_okay=True,
+            resolve_path=True,
+        ),
+    ],
+    recursive: Annotated[
+        bool,
+        typer.Option("--recursive/--no-recursive", "-r/-R", help="Walk into sub-directories."),
+    ] = True,
+    include_hidden: Annotated[
+        bool,
+        typer.Option("--hidden/--no-hidden", help="Include dotfiles and dot-directories."),
+    ] = False,
+    max_depth: Annotated[
+        int | None,
+        typer.Option("--max-depth", "-d", help="Maximum recursion depth (root = 0)."),
+    ] = None,
+    limit: Annotated[
+        int,
+        typer.Option("--limit", "-n", help="Show at most N rows in the table preview."),
+    ] = 20,
+) -> None:
+    """Scan a directory and print a summary of what was found.
+
+    This is a Week-1 read-only command: nothing is moved or modified.
+    """
+    try:
+        scanner = Scanner(
+            root=path,
+            recursive=recursive,
+            include_hidden=include_hidden,
+            max_depth=max_depth,
+        )
+    except (FileNotFoundError, NotADirectoryError) as exc:
+        err_console.print(f"Error: {exc}")
+        raise typer.Exit(code=1) from exc
+
+    with console.status(f"[bold cyan]Scanning {scanner.root}..."):
+        result = scanner.scan()
+
+    _render_summary(result, limit=limit)
+
+
+def _render_summary(result, *, limit: int) -> None:
+    """Pretty-print the scan result using rich."""
+    console.print()
+    console.rule(f"[bold]✨ Marie scan: {result.root}")
+
+    if result.total == 0:
+        console.print("[yellow]No files found.[/yellow]")
+        return
+
+    # Top-line stats.
+    console.print(
+        f"[bold green]Found {result.total} files[/bold green] "
+        f"(total {_human_size(result.total_size)}"
+        + (f", {result.skipped} skipped" if result.skipped else "")
+        + ")"
+    )
+
+    # Breakdown by extension (top 10).
+    ext_counts: dict[str, int] = {}
+    for f in result.files:
+        ext = f.suffix or "(no ext)"
+        ext_counts[ext] = ext_counts.get(ext, 0) + 1
+    top_exts = sorted(ext_counts.items(), key=lambda kv: kv[1], reverse=True)[:10]
+
+    ext_table = Table(title="Top file types", show_header=True, header_style="bold magenta")
+    ext_table.add_column("Extension", style="cyan")
+    ext_table.add_column("Count", justify="right")
+    for ext, count in top_exts:
+        ext_table.add_row(ext, str(count))
+    console.print(ext_table)
+
+    # Sample of files.
+    sample_table = Table(
+        title=f"First {min(limit, result.total)} files",
+        show_header=True,
+        header_style="bold magenta",
+    )
+    sample_table.add_column("Name", style="cyan", overflow="fold")
+    sample_table.add_column("Size", justify="right")
+    sample_table.add_column("Modified", style="dim")
+    sample_table.add_column("Depth", justify="right")
+    for f in result.files[:limit]:
+        sample_table.add_row(
+            f.name,
+            f.size_human,
+            f.modified_at.strftime("%Y-%m-%d %H:%M"),
+            str(f.depth),
+        )
+    console.print(sample_table)
+
+    if result.total > limit:
+        console.print(f"[dim]... and {result.total - limit} more files[/dim]")
+
+
+def _human_size(num: int) -> str:
+    size = float(num)
+    for unit in ("B", "KB", "MB", "GB", "TB"):
+        if size < 1024 or unit == "TB":
+            return f"{size:.1f} {unit}" if unit != "B" else f"{int(size)} {unit}"
+        size /= 1024
+    return f"{size:.1f} TB"
+
+
+if __name__ == "__main__":  # pragma: no cover
+    app()

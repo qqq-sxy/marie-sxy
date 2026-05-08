@@ -1,0 +1,102 @@
+[project]
+name = "marie-sxy"
+version = "0.1.0"
+description = "AI-powered file organizer. Drop a folder, get magic."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "w_sunxiaoyu", email = "w_sunxiaoyu@xiwang.com" },
+]
+keywords = ["ai", "cli", "file-organizer", "llm", "productivity"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "typer>=0.12",
+    "rich>=13",
+    "pydantic>=2",
+]
+
+[project.scripts]
+marie = "marie.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/sunxiaoyu/marie"
+Repository = "https://github.com/sunxiaoyu/marie"
+Issues = "https://github.com/sunxiaoyu/marie/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# PyPI distribution name is ``marie-sxy`` but the importable Python package
+# is ``marie``. Tell hatchling where the actual package lives.
+[tool.hatch.build.targets.wheel]
+packages = ["src/marie"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/marie",
+    "tests",
+    "README.md",
+    "PROJECT_PLAN.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "ruff>=0.6",
+]
+
+# ---------- Tooling ----------
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "C4",  # flake8-comprehensions
+    "RUF", # ruff-specific
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra --strict-markers --strict-config"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src/marie"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false

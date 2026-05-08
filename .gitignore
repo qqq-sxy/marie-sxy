@@ -1,0 +1,50 @@
+# --------- Python ---------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# --------- Virtual envs ---------
+.venv/
+venv/
+env/
+ENV/
+
+# --------- Build / dist ---------
+build/
+dist/
+*.egg-info/
+*.egg
+wheels/
+
+# --------- Tooling caches ---------
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+
+# --------- OS / Editors ---------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# --------- Marie runtime ---------
+# Local config / cache directories created at runtime.
+.marie/
+*.local.yaml
+*.local.toml
+
+# --------- Secrets ---------
+.env
+.env.*
+!.env.example
