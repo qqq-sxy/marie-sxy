@@ -11,9 +11,11 @@ from typing import Annotated
 import typer
 from rich.console import Console
 from rich.table import Table
+from rich.tree import Tree
 
 from marie_sxy import __version__
-from marie_sxy.core import Scanner
+from marie_sxy.core import ClassificationCache, Scanner, classify_file
+from marie_sxy.types import FileClassification, FileInfo
 
 app = typer.Typer(
     name="marie_sxy",
@@ -149,6 +151,122 @@ def _render_summary(result, *, limit: int) -> None:
 
     if result.total > limit:
         console.print(f"[dim]... and {result.total - limit} more files[/dim]")
+
+
+@app.command()
+def organize(
+    path: Annotated[
+        Path,
+        typer.Argument(
+            help="Directory to classify.",
+            exists=True,
+            file_okay=False,
+            dir_okay=True,
+            resolve_path=True,
+        ),
+    ],
+    dry_run: Annotated[
+        bool,
+        typer.Option(
+            "--dry-run/--apply",
+            help="Preview classification tree (default). File moves arrive in Week 4.",
+        ),
+    ] = True,
+    recursive: Annotated[
+        bool,
+        typer.Option("--recursive/--no-recursive", "-r/-R", help="Walk into sub-directories."),
+    ] = True,
+    include_hidden: Annotated[
+        bool,
+        typer.Option("--hidden/--no-hidden", help="Include dotfiles and dot-directories."),
+    ] = False,
+    max_depth: Annotated[
+        int | None,
+        typer.Option("--max-depth", "-d", help="Maximum recursion depth (root = 0)."),
+    ] = None,
+    limit: Annotated[
+        int,
+        typer.Option("--limit", "-n", help="Classify at most N files (safety cap)."),
+    ] = 200,
+) -> None:
+    """Classify files under PATH and show a Rich tree (Week 2).
+
+    Requires an LLM key for cloud models (see LiteLLM docs), or set
+    ``MARIE_SXY_OFFLINE=1`` for built-in filename heuristics.
+
+    Example: ``marie_sxy organize ~/Downloads --dry-run``
+    """
+    if not dry_run:
+        err_console.print(
+            "[yellow]--apply[/yellow] is not implemented yet (planned Week 4). "
+            "Use [cyan]--dry-run[/cyan] to preview."
+        )
+        raise typer.Exit(code=1)
+
+    try:
+        scanner = Scanner(
+            root=path,
+            recursive=recursive,
+            include_hidden=include_hidden,
+            max_depth=max_depth,
+        )
+    except (FileNotFoundError, NotADirectoryError) as exc:
+        err_console.print(f"Error: {exc}")
+        raise typer.Exit(code=1) from exc
+
+    cache = ClassificationCache.default()
+    pairs: list[tuple[FileInfo, FileClassification]] = []
+
+    with console.status("[bold cyan]Scanning + classifying..."):
+        result = scanner.scan()
+        subset = result.files[:limit]
+        for info in subset:
+            clf = classify_file(info, cache=cache)
+            pairs.append((info, clf))
+
+    console.print()
+    console.rule(f"[bold]✨ marie_sxy organize (dry-run): {result.root}")
+    if result.total == 0:
+        console.print("[yellow]No files found.[/yellow]")
+        return
+
+    if result.total > limit:
+        console.print(
+            f"[yellow]Showing tree for first {limit} of {result.total} files "
+            f"(use --limit to raise the cap).[/yellow]"
+        )
+
+    nested = _merge_categories(pairs)
+    tree = _nested_to_tree("[bold green]Suggested layout[/bold green]", nested)
+    console.print(tree)
+
+
+def _merge_categories(pairs: list[tuple[FileInfo, FileClassification]]) -> dict:
+    """Build a nested dict from slash-separated category paths."""
+    nested: dict = {}
+    for info, clf in pairs:
+        parts = [p.strip() for p in clf.category.split("/") if p.strip()]
+        if not parts:
+            parts = ["未分类"]
+        node = nested
+        for i, part in enumerate(parts):
+            if i == len(parts) - 1:
+                leaf = node.setdefault(part, {})
+                leaf.setdefault("__files__", []).append(info.name)
+            else:
+                node = node.setdefault(part, {})
+    return nested
+
+
+def _nested_to_tree(title: str, node: dict) -> Tree:
+    """Turn nested folders + ``__files__`` leaves into a :class:`rich.tree.Tree`."""
+    root = Tree(title)
+    subdirs = sorted(k for k in node if k != "__files__")
+    for key in subdirs:
+        root.add(_nested_to_tree(f"[cyan]📁 {key}[/cyan]", node[key]))
+    for fname in sorted(node.get("__files__", [])):
+        root.add(f"📄 {fname}")
+    return root
 
 
 def _human_size(num: int) -> str:

@@ -238,13 +238,13 @@ marie_sxy/
 - [x] 实现基础 CLI：`marie_sxy scan ~/Downloads` 输出文件列表
 - **里程碑**：能 print 出"找到 X 个文件" ✅
 
-### Week 2：分类核心
+### Week 2：分类核心 ✅
 
-- [ ] 接入 `litellm`，实现最简单的"按文件名分类"
-- [ ] 设计 Prompt（输出 JSON，用 Pydantic 校验）
-- [ ] 加缓存层（避免每次都调 API）
-- [ ] 用 `rich.tree` 展示分类结果
-- **里程碑**：跑通 `marie_sxy ~/Downloads --dry-run` 看到分类树
+- [x] 接入 `litellm`，实现最简单的"按文件名分类"
+- [x] 设计 Prompt（输出 JSON，用 Pydantic 校验）
+- [x] 加缓存层（避免每次都调 API）
+- [x] 用 `rich.tree` 展示分类结果
+- **里程碑**：跑通 `marie_sxy organize ~/Downloads --dry-run` 看到分类树 ✅
 
 ### Week 3：内容理解
 

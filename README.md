@@ -8,7 +8,7 @@
 
 ## 🚧 Status
 
-**Alpha** - 正在开发中（Week 1 地基已完成，当前 Week 2：分类核心）
+**Alpha** - 正在开发中（Week 2 分类核心已完成，当前 Week 3：内容理解）
 
 详细规划见 [`PROJECT_PLAN.md`](./PROJECT_PLAN.md)。
 
@@ -31,6 +31,10 @@ uv sync
 
 # 扫描一个目录（仅查看，不移动）
 uv run marie_sxy scan ~/Downloads
+
+# 按文件名做 AI/离线分类预览（默认 dry-run，不移动文件）
+# 需配置 LLM API（见 LiteLLM）；无密钥时可: export MARIE_SXY_OFFLINE=1
+uv run marie_sxy organize ~/Downloads --dry-run
 ```
 
 ## 🛠 Development

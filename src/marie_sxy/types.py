@@ -35,6 +35,23 @@ class FileInfo(BaseModel):
         return f"{size:.1f} TB"
 
 
+class FileClassification(BaseModel):
+    """LLM / heuristic output for where a file should live."""
+
+    model_config = ConfigDict(frozen=True)
+
+    category: str = Field(
+        ...,
+        description='Target folder path using "/" segments, e.g. "文档/发票".',
+    )
+    confidence: float = Field(..., ge=0.0, le=1.0)
+    reason: str = Field(default="", description="Short rationale.")
+    suggested_name: str | None = Field(
+        default=None,
+        description="Optional better filename; None to keep the original.",
+    )
+
+
 class ScanResult(BaseModel):
     """Aggregate result returned by Scanner."""
 
