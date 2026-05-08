@@ -29,6 +29,9 @@ dependencies = [
     "python-dotenv>=1.0",
 ]
 
+[project.optional-dependencies]
+gui = ["flet>=0.24"]
+
 [project.scripts]
 marie_sxy = "marie_sxy.cli:app"
 

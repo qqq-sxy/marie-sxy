@@ -399,5 +399,22 @@ def _human_size(num: int) -> str:
     return f"{size:.1f} TB"
 
 
+@app.command()
+def gui() -> None:
+    """Launch the desktop GUI window.
+
+    Requires the gui extra: ``uv sync --extra gui``
+    """
+    try:
+        from marie_sxy.gui.app import run_app
+    except ImportError:
+        err_console.print(
+            "GUI dependencies not installed. Run: [cyan]uv sync --extra gui[/cyan]"
+        )
+        raise typer.Exit(code=1)
+
+    run_app()
+
+
 if __name__ == "__main__":  # pragma: no cover
     app()
