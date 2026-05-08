@@ -25,6 +25,7 @@ dependencies = [
     "typer>=0.12",
     "rich>=13",
     "pydantic>=2",
+    "litellm>=1.55",
 ]
 
 [project.scripts]
@@ -100,3 +101,6 @@ branch = true
 [tool.coverage.report]
 show_missing = true
 skip_covered = false
+
+[tool.uv]
+index-url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
