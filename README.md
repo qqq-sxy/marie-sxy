@@ -37,6 +37,16 @@ uv run marie_sxy scan ~/Downloads
 uv run marie_sxy organize ~/Downloads --dry-run
 ```
 
+### API Key（本地文件，不会进 Git）
+
+1. 复制仓库里的 [`.env.example`](./.env.example) 为 **`.env`**（与 `pyproject.toml` 同级即可）。
+2. 在 `.env` 里填写例如 `OPENAI_API_KEY=sk-...`（默认模型为 `gpt-4o-mini`，也可用 `MARIE_SXY_MODEL` 覆盖）。
+3. **`.env` 已在 `.gitignore` 中**，`git push` 不会带上远程。
+
+可选：用环境变量 **`MARIE_SXY_ENV_FILE=/绝对路径/自定义.env`** 指定任意密钥文件（同样请勿提交该文件）。
+
+用户级兜底（不配项目 `.env` 时）：可把密钥放在 `~/.config/marie_sxy/.env`（尊重 `XDG_CONFIG_HOME`）。
+
 ## 🛠 Development
 
 ```bash

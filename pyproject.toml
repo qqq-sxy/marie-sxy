@@ -26,6 +26,7 @@ dependencies = [
     "rich>=13",
     "pydantic>=2",
     "litellm>=1.55",
+    "python-dotenv>=1.0",
 ]
 
 [project.scripts]
@@ -53,6 +54,7 @@ include = [
     "PROJECT_PLAN.md",
     "LICENSE",
     "pyproject.toml",
+    ".env.example",
 ]
 
 [dependency-groups]

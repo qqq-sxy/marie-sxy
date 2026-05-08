@@ -15,6 +15,7 @@ from rich.tree import Tree
 
 from marie_sxy import __version__
 from marie_sxy.core import ClassificationCache, Scanner, classify_file
+from marie_sxy.env_loader import load_dotenv_files
 from marie_sxy.types import FileClassification, FileInfo
 
 app = typer.Typer(
@@ -47,6 +48,7 @@ def _root(
     ] = False,
 ) -> None:
     """Root command - shared options live here."""
+    load_dotenv_files()
 
 
 @app.command()

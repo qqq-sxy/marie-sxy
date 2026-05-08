@@ -851,6 +851,7 @@ source = { editable = "." }
 dependencies = [
     { name = "litellm" },
     { name = "pydantic" },
+    { name = "python-dotenv" },
     { name = "rich" },
     { name = "typer" },
 ]
@@ -866,6 +867,7 @@ dev = [
 requires-dist = [
     { name = "litellm", specifier = ">=1.55" },
     { name = "pydantic", specifier = ">=2" },
+    { name = "python-dotenv", specifier = ">=1.0" },
     { name = "rich", specifier = ">=13" },
     { name = "typer", specifier = ">=0.12" },
 ]
